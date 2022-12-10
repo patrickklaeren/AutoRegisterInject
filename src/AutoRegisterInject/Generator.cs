@@ -45,7 +45,7 @@ public class Generator : IIncrementalGenerator
 
     private static AutoRegisteredClass GetAutoRegisteredClassDeclarations(GeneratorSyntaxContext context)
     {
-        var classDeclaration = (ClassDeclarationSyntax) context.Node;
+        var classDeclaration = (ClassDeclarationSyntax)context.Node;
 
         foreach (var attributeListSyntax in classDeclaration.AttributeLists)
         {
@@ -57,10 +57,10 @@ public class Generator : IIncrementalGenerator
                 }
 
                 var fullyQualifiedAttributeName = attributeSymbol.ContainingType.ToString();
-                
+
                 if (RegistrationTypes.TryGetValue(fullyQualifiedAttributeName, out var registrationType))
                 {
-                    var symbol = (INamedTypeSymbol) context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+                    var symbol = (INamedTypeSymbol)context.SemanticModel.GetDeclaredSymbol(classDeclaration);
 
                     var interfaces = symbol.Interfaces
                         .Select(x => x.ToDisplayString())
@@ -84,35 +84,40 @@ public class Generator : IIncrementalGenerator
             .Replace(" ", string.Empty)
             .Trim();
 
-        var registrations = classes.Select(GetRegistration);
+        // Group by name and type because we want to avoid any partial
+        // declarations from popping up twice. Especially true if you
+        // use another source generator that makes a partial class/file
+        var registrations = classes
+            .GroupBy(x => new { x.ClassName, x.RegistrationType })
+            .Select(x => GetRegistration(x.Key.RegistrationType, x.Key.ClassName, x.SelectMany(d => d.Interfaces).ToArray()));
 
-        string GetRegistration(AutoRegisteredClass classDeclaration)
+        string GetRegistration(AutoRegistrationType type, string className, string[] interfaces)
         {
-            var hasInterfaces = classDeclaration.Interfaces.Any();
+            var hasInterfaces = interfaces.Any();
 
-            return classDeclaration.RegistrationType switch
+            return type switch
             {
-                AutoRegistrationType.Scoped when !hasInterfaces 
-                    => string.Format(SourceConstants.GENERATE_SCOPED_SOURCE, classDeclaration.ClassName),
-                AutoRegistrationType.Scoped when hasInterfaces 
-                    => string.Join(Environment.NewLine, classDeclaration.Interfaces.Select(d => string.Format(SourceConstants.GENERATE_SCOPED_INTERFACE_SOURCE, d, classDeclaration.ClassName))),
+                AutoRegistrationType.Scoped when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_SCOPED_SOURCE, className),
+                AutoRegistrationType.Scoped when hasInterfaces
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_SCOPED_INTERFACE_SOURCE, d, className))),
 
-                AutoRegistrationType.Singleton when !hasInterfaces 
-                    => string.Format(SourceConstants.GENERATE_SINGLETON_SOURCE, classDeclaration.ClassName),
-                AutoRegistrationType.Singleton when hasInterfaces 
-                    => string.Join(Environment.NewLine, classDeclaration.Interfaces.Select(d => string.Format(SourceConstants.GENERATE_SINGLETON_INTERFACE_SOURCE, d, classDeclaration.ClassName))),
+                AutoRegistrationType.Singleton when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_SINGLETON_SOURCE, className),
+                AutoRegistrationType.Singleton when hasInterfaces
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_SINGLETON_INTERFACE_SOURCE, d, className))),
 
-                AutoRegistrationType.Transient when !hasInterfaces 
-                    => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, classDeclaration.ClassName),
-                AutoRegistrationType.Transient when hasInterfaces 
-                    => string.Join(Environment.NewLine, classDeclaration.Interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRANSIENT_INTERFACE_SOURCE, d, classDeclaration.ClassName))),
+                AutoRegistrationType.Transient when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, className),
+                AutoRegistrationType.Transient when hasInterfaces
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRANSIENT_INTERFACE_SOURCE, d, className))),
 
                 _ => throw new NotImplementedException("Auto registration type not set up to output"),
             };
         }
 
         var formatted = string.Join(Environment.NewLine, registrations);
-        var output = SourceConstants.GENERATE_CLASS_SOURCE.Replace("{0}", assemblyNameForMethod).Replace("{1}",  formatted);
+        var output = SourceConstants.GENERATE_CLASS_SOURCE.Replace("{0}", assemblyNameForMethod).Replace("{1}", formatted);
         context.AddSource("AutoRegisterInject.ServiceCollectionExtension.g.cs", SourceText.From(output, Encoding.UTF8));
     }
 }
