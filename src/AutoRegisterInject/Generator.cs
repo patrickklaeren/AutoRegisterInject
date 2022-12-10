@@ -12,15 +12,15 @@ namespace AutoRegisterInject;
 [Generator]
 public class Generator : IIncrementalGenerator
 {
-    private const string ScopedFullyQualified = "AutoRegisterInject.RegisterScopedAttribute";
-    private const string SingletonFullyQualified = "AutoRegisterInject.RegisterSingletonAttribute";
-    private const string TransientFullyQualified = "AutoRegisterInject.RegisterTransientAttribute";
+    private const string SCOPED_ATTRIBUTE_NAME = "RegisterScopedAttribute";
+    private const string SINGLETON_ATTRIBUTE_NAME = "RegisterSingletonAttribute";
+    private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
 
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
     {
-        [ScopedFullyQualified] = AutoRegistrationType.Scoped,
-        [SingletonFullyQualified] = AutoRegistrationType.Singleton,
-        [TransientFullyQualified] = AutoRegistrationType.Transient,
+        [SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.Scoped,
+        [SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.Singleton,
+        [TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.Transient,
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext initialisationContext)
