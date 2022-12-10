@@ -29,7 +29,13 @@ AutoRegisterInject moves the responsibility of service registration to the ownin
 
 ## Installation
 
-Install the Nuget package, and start decorating classes with ARI attributes.
+Install the [Nuget](https://www.nuget.org/packages/AutoRegisterInject) package, and start decorating classes with ARI attributes.
+
+Use `dotnet add package AutoRegisterInject` or add a package reference manually:
+
+```xml
+<PackageReference Include="AutoRegisterInject" />
+```
 
 ## Usage
 
@@ -110,3 +116,7 @@ serviceCollection.BuildServiceProvider();
 ```
 
 AutoRegisterInject will remove illegal characters from assembly names in order to generate legal C# method names. `,`, `.` and ` ` will be removed.
+
+## License
+
+AutoRegisterInject is MIT licensed. Do with it what you please under the terms of MIT.
