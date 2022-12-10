@@ -10,16 +10,16 @@
 		<Title>AutoRegisterInject</Title>
 		<Authors>Patrick Klaeren</Authors>
 		<Description>C# Source Generator to automatically register dependencies in Microsoft Dependency Injection Service Collection</Description>
+    	<Copyright>Copyright © Patrick Klaeren</Copyright>
 		<PackageProjectUrl>https://github.com/patrickklaeren/AutoRegisterInject</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageIcon>Icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/patrickklaeren/AutoRegisterInject</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PackageTags>source generator;dependency injection;dependencies;registration;extensions;ioc</PackageTags>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
-
-	<ItemGroup>
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="IsExternalInit" Version="1.0.3">
@@ -34,6 +34,7 @@
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
+		<None Include="..\..\Icon.png" Pack="true" PackagePath="\" Visible="false" />
 	</ItemGroup>
 
 </Project>
