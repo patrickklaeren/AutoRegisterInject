@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "AutoRegisterInject": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\IntegrationTests\\AutoRegisterInject.Tests\\AutoRegisterInject.Tests.csproj"
+    }
+  }
+}
