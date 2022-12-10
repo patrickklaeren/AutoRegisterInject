@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,20 @@
 		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>AutoRegisterInject</Title>
+		<Authors>Patrick Klaeren</Authors>
+		<Description>C# Source Generator to automatically register dependencies in Microsoft Dependency Injection Service Collection</Description>
+		<PackageProjectUrl>https://github.com/patrickklaeren/AutoRegisterInject</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/patrickklaeren/AutoRegisterInject</RepositoryUrl>
+		<PackageTags>source generator;dependency injection;dependencies;registration;extensions;ioc</PackageTags>
+		<Version>1.0.0</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="IsExternalInit" Version="1.0.3">
@@ -19,6 +32,8 @@
 
 	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>
