@@ -66,8 +66,6 @@ public class Generator : IIncrementalGenerator
 
                     var interfaces = symbol.Interfaces
                         .Select(x => x.ToDisplayString())
-                        // Exclude anything like IHostedService, etc from the hosting packages when/if
-                        // we're auto registering hosted services
                         .ToArray();
 
                     return new AutoRegisteredClass(symbol.ToDisplayString(),
