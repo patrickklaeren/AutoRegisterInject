@@ -15,12 +15,14 @@ public class Generator : IIncrementalGenerator
     private const string SCOPED_ATTRIBUTE_NAME = "RegisterScopedAttribute";
     private const string SINGLETON_ATTRIBUTE_NAME = "RegisterSingletonAttribute";
     private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
+    private const string HOSTED_SERVICE_ATTRIBUTE_NAME = "RegisterHostedServiceAttribute";
 
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
     {
         [SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.Scoped,
         [SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.Singleton,
         [TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.Transient,
+        [HOSTED_SERVICE_ATTRIBUTE_NAME] = AutoRegistrationType.Hosted,
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext initialisationContext)
@@ -64,6 +66,8 @@ public class Generator : IIncrementalGenerator
 
                     var interfaces = symbol.Interfaces
                         .Select(x => x.ToDisplayString())
+                        // Exclude anything like IHostedService, etc from the hosting packages when/if
+                        // we're auto registering hosted services
                         .ToArray();
 
                     return new AutoRegisteredClass(symbol.ToDisplayString(),
@@ -111,6 +115,9 @@ public class Generator : IIncrementalGenerator
                     => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, className),
                 AutoRegistrationType.Transient when hasInterfaces
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRANSIENT_INTERFACE_SOURCE, d, className))),
+
+                AutoRegistrationType.Hosted // Hosted services do not support interfaces at this time
+                    => string.Format(SourceConstants.GENERATE_HOSTED_SERVICE_SOURCE, className),
 
                 _ => throw new NotImplementedException("Auto registration type not set up to output"),
             };

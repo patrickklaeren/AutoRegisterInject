@@ -5,13 +5,13 @@ VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRegisterInject", "src\AutoRegisterInject\AutoRegisterInject.csproj", "{4431892A-827A-4301-B5D9-CECE7F6EB270}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRegisterInject.Tests", "src\IntegrationTests\AutoRegisterInject.Tests\AutoRegisterInject.Tests.csproj", "{154DFDBB-A289-4268-96FC-1C7FBACF0F7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRegisterInject.Tests", "src\AutoRegisterInject.Tests\AutoRegisterInject.Tests.csproj", "{154DFDBB-A289-4268-96FC-1C7FBACF0F7E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{3B93E2B4-A3EF-4DA0-98F1-30F46425990F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRegisterInject.IntegrationTest.Project1", "src\IntegrationTests\AutoRegisterInject.IntegrationTest.Project1\AutoRegisterInject.IntegrationTest.Project1.csproj", "{048B9611-3120-47D9-80A6-A7FC9A8E9914}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRegisterInject.IntegrationTest.Project1", "src\AutoRegisterInject.IntegrationTests\AutoRegisterInject.IntegrationTest.Project1\AutoRegisterInject.IntegrationTest.Project1.csproj", "{048B9611-3120-47D9-80A6-A7FC9A8E9914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRegisterInject.IntegrationTest.Project2", "src\IntegrationTests\AutoRegisterInject.IntegrationTest.Project2\AutoRegisterInject.IntegrationTest.Project2.csproj", "{D39A49D2-DF71-4792-A958-D2BD6B845518}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRegisterInject.IntegrationTest.Project2", "src\AutoRegisterInject.IntegrationTests\AutoRegisterInject.IntegrationTest.Project2\AutoRegisterInject.IntegrationTest.Project2.csproj", "{D39A49D2-DF71-4792-A958-D2BD6B845518}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

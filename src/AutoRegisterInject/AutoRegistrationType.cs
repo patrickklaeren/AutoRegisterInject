@@ -4,5 +4,6 @@ internal enum AutoRegistrationType
 {
     Scoped,
     Singleton,
-    Transient
+    Transient,
+    Hosted
 }
