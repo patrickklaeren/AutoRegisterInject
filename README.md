@@ -39,10 +39,11 @@ Use `dotnet add package AutoRegisterInject` or add a package reference manually:
 
 ## Usage
 
-Classes should be decorated with one of three attributes:
+Classes should be decorated with one of four attributes:
 - `[RegisterScoped]`
 - `[RegisterSingleton]`
 - `[RegisterTransient]`
+- `[RegisterHostedService]`
 
 Register a class:
 
@@ -66,6 +67,19 @@ serviceCollection.BuildServiceProvider();
 ```
 
 You can now inject `Foo` as a dependency and have this resolved as scoped.
+
+Alternatively, you can register hosted services by:
+
+```cs
+[RegisterHostedService]
+class Foo;
+```
+
+and get:
+
+```cs
+serviceCollection.AddHostedService<Foo>();
+```
 
 ### Register as interface
 
