@@ -5,5 +5,8 @@ internal enum AutoRegistrationType
     Scoped,
     Singleton,
     Transient,
-    Hosted
+    Hosted,
+    ScopedNoInterface,
+    SingletonNoInterface,
+    TransientNoInterface,
 }
