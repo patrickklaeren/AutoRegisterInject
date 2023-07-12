@@ -15,6 +15,9 @@ public class Generator : IIncrementalGenerator
     private const string SCOPED_ATTRIBUTE_NAME = "RegisterScopedAttribute";
     private const string SINGLETON_ATTRIBUTE_NAME = "RegisterSingletonAttribute";
     private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
+    private const string SCOPED_NO_INTERFACE_ATTRIBUTE_NAME = "RegisterScopedNoInterfaceAttribute";
+    private const string SINGLETON_NO_INTERFACE_ATTRIBUTE_NAME = "RegisterSingletonNoInterfaceAttribute";
+    private const string TRANSIENT_NO_INTERFACE_ATTRIBUTE_NAME = "RegisterTransientNoInterfaceAttribute";
     private const string HOSTED_SERVICE_ATTRIBUTE_NAME = "RegisterHostedServiceAttribute";
 
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
@@ -22,6 +25,9 @@ public class Generator : IIncrementalGenerator
         [SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.Scoped,
         [SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.Singleton,
         [TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.Transient,
+        [SCOPED_NO_INTERFACE_ATTRIBUTE_NAME] = AutoRegistrationType.ScopedNoInterface,
+        [SINGLETON_NO_INTERFACE_ATTRIBUTE_NAME] = AutoRegistrationType.SingletonNoInterface,
+        [TRANSIENT_NO_INTERFACE_ATTRIBUTE_NAME] = AutoRegistrationType.TransientNoInterface,
         [HOSTED_SERVICE_ATTRIBUTE_NAME] = AutoRegistrationType.Hosted,
     };
 
@@ -101,16 +107,28 @@ public class Generator : IIncrementalGenerator
             {
                 AutoRegistrationType.Scoped when !hasInterfaces
                     => string.Format(SourceConstants.GENERATE_SCOPED_SOURCE, className),
+
+                AutoRegistrationType.ScopedNoInterface 
+                    => string.Format(SourceConstants.GENERATE_SCOPED_SOURCE, className),
+
                 AutoRegistrationType.Scoped when hasInterfaces
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_SCOPED_INTERFACE_SOURCE, d, className))),
 
                 AutoRegistrationType.Singleton when !hasInterfaces
                     => string.Format(SourceConstants.GENERATE_SINGLETON_SOURCE, className),
+
+                AutoRegistrationType.SingletonNoInterface
+                    => string.Format(SourceConstants.GENERATE_SINGLETON_SOURCE, className),
+
                 AutoRegistrationType.Singleton when hasInterfaces
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_SINGLETON_INTERFACE_SOURCE, d, className))),
 
                 AutoRegistrationType.Transient when !hasInterfaces
                     => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, className),
+
+                AutoRegistrationType.TransientNoInterface
+                    => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, className),
+
                 AutoRegistrationType.Transient when hasInterfaces
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRANSIENT_INTERFACE_SOURCE, d, className))),
 

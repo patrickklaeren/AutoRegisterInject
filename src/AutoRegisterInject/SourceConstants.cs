@@ -13,6 +13,12 @@ internal sealed class RegisterSingletonAttribute : System.Attribute { }
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterTransientAttribute : System.Attribute { }
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterScopedNoInterfaceAttribute : System.Attribute { }
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterSingletonNoInterfaceAttribute : System.Attribute { }
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterTransientNoInterfaceAttribute : System.Attribute { }
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
 
     internal static string GENERATE_SCOPED_SOURCE = "serviceCollection.AddScoped<{0}>();";
