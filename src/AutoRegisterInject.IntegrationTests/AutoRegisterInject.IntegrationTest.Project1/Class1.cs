@@ -99,4 +99,18 @@ namespace AutoRegisterInject.IntegrationTest.Project1
             return new ValueTask();
         }
     }
+
+    [RegisterScoped(typeof(IIgnore), typeof(IInterfaceTest))]
+    public class MultiInterfaceMultiIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
+    {
+        public void Dispose()
+        {
+            // TODO release managed resources here
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return new ValueTask();
+        }
+    }
 }

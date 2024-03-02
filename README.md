@@ -131,6 +131,36 @@ serviceCollection.BuildServiceProvider();
 
 AutoRegisterInject will remove illegal characters from assembly names in order to generate legal C# method names. `,`, `.` and ` ` will be removed.
 
+### Ignoring interfaces
+
+By default ARI will register a type with all the interfaces it implements, however this excludes `System.IDisposable` and its `IAsyncDisposable` counterpart.
+
+You can ignore interfaces by telling ARI to *explicitly* register with only declared interfaces in the given attributes:
+
+```cs
+public interface IFoo { }
+public interface IBar { }
+[RegisterScoped(typeof(IBar))]
+public class Foo;
+```
+
+this will result in `Foo` ONLY being registered as `IBar` and the following output:
+
+```cs
+serviceCollection.AddTransient<IBar, Foo>();
+```
+
+`IFoo` will be ignored entirely.
+
+Where you want to register as multiple interfaces, you can pass multiple types.
+
+```cs
+[RegisterScoped(typeof(IBar), typeof(IFoo))]
+public class Foo;
+```
+
+This works for all applicable attributes.
+
 ## License
 
 AutoRegisterInject is MIT licensed. Do with it what you please under the terms of MIT.
