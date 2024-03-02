@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoRegisterInject.IntegrationTest.Project1
 {
@@ -66,8 +68,35 @@ namespace AutoRegisterInject.IntegrationTest.Project1
     }
 
     [RegisterScoped]
-    public class MultiInterfaceTest : IInterfaceTest, IMultiInterfaceTest
+    public class MultiInterfaceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable
     {
+        public void Dispose()
+        {
+            // TODO release managed resources here
+        }
 
+        public ValueTask DisposeAsync()
+        {
+            return new ValueTask();
+        }
+    }
+
+    public interface IIgnore
+    {
+        
+    }
+
+    [RegisterScoped(typeof(IIgnore))]
+    public class MultiInterfaceIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
+    {
+        public void Dispose()
+        {
+            // TODO release managed resources here
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return new ValueTask();
+        }
     }
 }

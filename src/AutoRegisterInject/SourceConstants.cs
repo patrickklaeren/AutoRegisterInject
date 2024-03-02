@@ -7,7 +7,10 @@ internal sealed class SourceConstants
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterScopedAttribute : System.Attribute { }
+internal sealed class RegisterScopedAttribute : System.Attribute 
+{ 
+    internal RegisterScopedAttribute(params System.Type[] doNotRegisterAs) { }
+}
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterSingletonAttribute : System.Attribute { }
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
