@@ -7,14 +7,20 @@ internal sealed class SourceConstants
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterScopedAttribute : System.Attribute 
+internal sealed class RegisterScopedAttribute : System.Attribute
 { 
     internal RegisterScopedAttribute(params System.Type[] onlyRegisterAs) { }
 }
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterSingletonAttribute : System.Attribute { }
+internal sealed class RegisterSingletonAttribute : System.Attribute
+{ 
+    internal RegisterSingletonAttribute(params System.Type[] onlyRegisterAs) { }
+}
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterTransientAttribute : System.Attribute { }
+internal sealed class RegisterTransientAttribute : System.Attribute
+{ 
+    internal RegisterTransientAttribute(params System.Type[] onlyRegisterAs) { }
+}
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
 
