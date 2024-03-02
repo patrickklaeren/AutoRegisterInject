@@ -17,6 +17,8 @@ public class Generator : IIncrementalGenerator
     private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
     private const string HOSTED_SERVICE_ATTRIBUTE_NAME = "RegisterHostedServiceAttribute";
 
+    private const string ONLY_REGISTER_AS = "onlyRegisterAs";
+
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
     {
         [SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.Scoped,
@@ -25,11 +27,11 @@ public class Generator : IIncrementalGenerator
         [HOSTED_SERVICE_ATTRIBUTE_NAME] = AutoRegistrationType.Hosted,
     };
     
-    private static readonly string[] IgnoredInterfaces = new[]
-    {
+    private static readonly string[] IgnoredInterfaces =
+    [
         "System.IDisposable",
         "System.IAsyncDisposable"
-    };
+    ];
     
     public void Initialize(IncrementalGeneratorInitializationContext initialisationContext)
     {
@@ -69,26 +71,33 @@ public class Generator : IIncrementalGenerator
                 if (RegistrationTypes.TryGetValue(fullyQualifiedAttributeName, out var registrationType))
                 {
                     var symbol = (INamedTypeSymbol)context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-                    
-                    var attributeData = symbol.GetAttribute(fullyQualifiedAttributeName);
+                    var typeName = symbol.ToDisplayString();
 
-                    Type[] ignoredTypes = [];
+                    var attributeData = symbol.GetFirstAutoRegisterAttribute(fullyQualifiedAttributeName);
+
+                    string[] registerAs;
                     
                     if (attributeData?.AttributeConstructor?.Parameters.Length > 0
-                        && attributeData.GetParameterValues<Type[]>("doNotRegisterAs") is { Length: > 0 } doNoRegisterAs)
+                        && attributeData.GetIgnoredTypeNames(ONLY_REGISTER_AS) is { Length: > 0 } onlyRegisterAs)
                     {
-                        ignoredTypes = doNoRegisterAs;
-                    }
-
-                    var interfaces = symbol!
+                        registerAs = symbol!
                         .Interfaces
                         .Select(x => x.ToDisplayString())
-                        .Where(x => !IgnoredInterfaces.Contains(x) && ignoredTypes.All(d => d.ToString() != x))
+                        .Where(x => onlyRegisterAs.Contains(x))
                         .ToArray();
+                    }
+                    else
+                    {
+                        registerAs = symbol!
+                        .Interfaces
+                        .Select(x => x.ToDisplayString())
+                        .Where(x => !IgnoredInterfaces.Contains(x))
+                        .ToArray();
+                    }
 
-                    return new AutoRegisteredClass(symbol.ToDisplayString(),
+                    return new AutoRegisteredClass(typeName,
                         registrationType,
-                        interfaces);
+                        registerAs);
                 }
             }
         }

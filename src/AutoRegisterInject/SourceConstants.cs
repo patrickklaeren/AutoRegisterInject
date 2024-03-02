@@ -9,7 +9,7 @@ internal sealed class SourceConstants
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterScopedAttribute : System.Attribute 
 { 
-    internal RegisterScopedAttribute(params System.Type[] doNotRegisterAs) { }
+    internal RegisterScopedAttribute(params System.Type[] onlyRegisterAs) { }
 }
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterSingletonAttribute : System.Attribute { }

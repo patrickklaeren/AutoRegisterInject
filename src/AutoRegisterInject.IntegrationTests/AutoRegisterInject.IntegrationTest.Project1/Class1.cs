@@ -86,7 +86,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         
     }
 
-    [RegisterScoped(typeof(IIgnore))]
+    [RegisterScoped(onlyRegisterAs: typeof(IIgnore))]
     public class MultiInterfaceIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
     {
         public void Dispose()

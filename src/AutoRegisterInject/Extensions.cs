@@ -4,15 +4,14 @@ using Microsoft.CodeAnalysis;
 
 namespace AutoRegisterInject;
 
-public static class SymbolExtensions
+public static class Extensions
 {
-    public static AttributeData GetAttribute(this ISymbol symbol, string attributeName)
+    public static AttributeData GetFirstAutoRegisterAttribute(this ISymbol symbol, string attributeName)
     {
         return symbol.GetAttributes().First(ad => ad.AttributeClass?.Name == attributeName);
     }
     
-    public static T GetParameterValues<T>(this AttributeData attributeData, string parameterName)
-        where T : class
+    public static string[] GetIgnoredTypeNames(this AttributeData attributeData, string parameterName)
     {
         if (attributeData.AttributeConstructor is null)
         {
@@ -30,6 +29,12 @@ public static class SymbolExtensions
             return null;
         }
 
-        return attributeData.ConstructorArguments[parameterIndex].Values as T;
+        var values = attributeData
+            .ConstructorArguments[parameterIndex]
+            .Values
+            .Select(x => x.Value.ToString())
+            .ToArray();
+
+        return values;
     }
 }
