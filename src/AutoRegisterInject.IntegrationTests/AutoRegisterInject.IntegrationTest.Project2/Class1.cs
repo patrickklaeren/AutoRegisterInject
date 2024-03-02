@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoRegisterInject.IntegrationTest.Project2
 {
@@ -25,4 +26,27 @@ namespace AutoRegisterInject.IntegrationTest.Project2
     {
 
     }
+
+    public class FooBarAttribute : Attribute
+    {
+        public FooBarAttribute(params Type[] ignoreInterfaces)
+        {
+            
+        }
+    }
+
+    public class BarAttribute : FooBarAttribute
+    {
+        public BarAttribute(params Type[] ignoreInterfaces)
+        {
+
+        }
+    }
+
+    [Bar(typeof(PartialClassTest))]
+    public class Destination
+    {
+        
+    }
+    
 }
