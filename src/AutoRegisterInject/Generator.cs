@@ -81,7 +81,7 @@ public class Generator : IIncrementalGenerator
                         && attributeData.GetIgnoredTypeNames(ONLY_REGISTER_AS) is { Length: > 0 } onlyRegisterAs)
                     {
                         registerAs = symbol!
-                        .Interfaces
+                        .AllInterfaces
                         .Select(x => x.ToDisplayString())
                         .Where(x => onlyRegisterAs.Contains(x))
                         .ToArray();
