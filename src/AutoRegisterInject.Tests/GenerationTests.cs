@@ -23,16 +23,73 @@ internal sealed class RegisterScopedAttribute : System.Attribute
 { 
     internal RegisterScopedAttribute(params System.Type[] onlyRegisterAs) { }
 }
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterKeyedScopedAttribute : System.Attribute
+{ 
+    internal RegisterKeyedScopedAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterScopedAttribute : System.Attribute
+{ 
+    internal TryRegisterScopedAttribute(params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterKeyedScopedAttribute : System.Attribute
+{ 
+    internal TryRegisterKeyedScopedAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+}
+
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterSingletonAttribute : System.Attribute
 { 
     internal RegisterSingletonAttribute(params System.Type[] onlyRegisterAs) { }
 }
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterKeyedSingletonAttribute : System.Attribute
+{ 
+    internal RegisterKeyedSingletonAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterSingletonAttribute : System.Attribute
+{ 
+    internal TryRegisterSingletonAttribute(params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterKeyedSingletonAttribute : System.Attribute
+{ 
+    internal TryRegisterKeyedSingletonAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+}
+
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterTransientAttribute : System.Attribute
 { 
     internal RegisterTransientAttribute(params System.Type[] onlyRegisterAs) { }
 }
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterKeyedTransientAttribute : System.Attribute
+{ 
+    internal RegisterKeyedTransientAttribute(params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterTransientAttribute : System.Attribute
+{ 
+    internal TryRegisterTransientAttribute(params System.Type[] onlyRegisterAs) { }
+}
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
+{ 
+    internal TryRegisterKeyedTransientAttribute(params System.Type[] onlyRegisterAs) { }
+}
+
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
 
