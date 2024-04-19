@@ -16,6 +16,18 @@ public class Generator : IIncrementalGenerator
     private const string SINGLETON_ATTRIBUTE_NAME = "RegisterSingletonAttribute";
     private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
     private const string HOSTED_SERVICE_ATTRIBUTE_NAME = "RegisterHostedServiceAttribute";
+    
+    private const string KEYED_SCOPED_ATTRIBUTE_NAME = "RegisterKeyedScopedAttribute";
+    private const string KEYED_SINGLETON_ATTRIBUTE_NAME = "RegisterKeyedSingletonAttribute";
+    private const string KEYED_TRANSIENT_ATTRIBUTE_NAME = "RegisterKeyedTransientAttribute";
+    
+    private const string TRY_SCOPED_ATTRIBUTE_NAME = "TryRegisterScopedAttribute";
+    private const string TRY_SINGLETON_ATTRIBUTE_NAME = "TryRegisterSingletonAttribute";
+    private const string TRY_TRANSIENT_ATTRIBUTE_NAME = "TryRegisterTransientAttribute";
+    
+    private const string TRY_KEYED_SCOPED_ATTRIBUTE_NAME = "TryRegisterKeyedScopedAttribute";
+    private const string TRY_KEYED_SINGLETON_ATTRIBUTE_NAME = "TryRegisterKeyedSingletonAttribute";
+    private const string TRY_KEYED_TRANSIENT_ATTRIBUTE_NAME = "TryRegisterKeyedTransientAttribute";
 
     private const string ONLY_REGISTER_AS = "onlyRegisterAs";
 
@@ -25,6 +37,18 @@ public class Generator : IIncrementalGenerator
         [SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.Singleton,
         [TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.Transient,
         [HOSTED_SERVICE_ATTRIBUTE_NAME] = AutoRegistrationType.Hosted,
+        
+        [KEYED_SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.KeyedScoped,
+        [KEYED_SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.KeyedSingleton,
+        [KEYED_TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.KeyedTransient,
+        
+        [TRY_SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.TryScoped,
+        [TRY_SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.TrySingleton,
+        [TRY_TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.TryTransient,
+        
+        [TRY_KEYED_SCOPED_ATTRIBUTE_NAME] = AutoRegistrationType.TryKeyedScoped,
+        [TRY_KEYED_SINGLETON_ATTRIBUTE_NAME] = AutoRegistrationType.TryKeyedSingleton,
+        [TRY_KEYED_TRANSIENT_ATTRIBUTE_NAME] = AutoRegistrationType.TryKeyedTransient,
     };
     
     private static readonly string[] IgnoredInterfaces =
@@ -50,7 +74,10 @@ public class Generator : IIncrementalGenerator
 
         var compilationModel = initialisationContext.CompilationProvider.Combine(autoRegistered.Collect());
 
-        initialisationContext.RegisterSourceOutput(compilationModel, static (sourceContext, source) => Execute(source.Left, source.Right, sourceContext));
+        initialisationContext.RegisterSourceOutput(compilationModel, static (sourceContext, source) =>
+        {
+            Execute(source.Left, source.Right, sourceContext);
+        });
     }
 
     private static AutoRegisteredClass GetAutoRegisteredClassDeclarations(GeneratorSyntaxContext context)
@@ -97,7 +124,8 @@ public class Generator : IIncrementalGenerator
 
                     return new AutoRegisteredClass(typeName,
                         registrationType,
-                        registerAs);
+                        registerAs,
+                        string.Empty);
                 }
             }
         }
@@ -147,6 +175,52 @@ public class Generator : IIncrementalGenerator
                     => string.Format(SourceConstants.GENERATE_TRANSIENT_SOURCE, className),
                 AutoRegistrationType.Transient
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRANSIENT_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TryTransient when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_TRANSIENT_SOURCE, className),
+                AutoRegistrationType.TryTransient
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_TRANSIENT_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TryScoped when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_SCOPED_SOURCE, className),
+                AutoRegistrationType.TryScoped
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_SCOPED_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TrySingleton when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_SINGLETON_SOURCE, className),
+                AutoRegistrationType.TrySingleton
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_SINGLETON_INTERFACE_SOURCE, d, className))),
+                
+                // TODO Refactor string Format calls to support keys
+                AutoRegistrationType.KeyedScoped when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_SOURCE, className),
+                AutoRegistrationType.KeyedScoped
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.KeyedSingleton when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_SOURCE, className),
+                AutoRegistrationType.KeyedSingleton
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.KeyedTransient when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_SOURCE, className),
+                AutoRegistrationType.KeyedTransient
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TryKeyedScoped when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_SOURCE, className),
+                AutoRegistrationType.TryKeyedScoped
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TryKeyedSingleton when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_SOURCE, className),
+                AutoRegistrationType.TryKeyedSingleton
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE, d, className))),
+                
+                AutoRegistrationType.TryKeyedTransient when !hasInterfaces
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_SOURCE, className),
+                AutoRegistrationType.TryKeyedTransient
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className))),
 
                 AutoRegistrationType.Hosted // Hosted services do not support interfaces at this time
                     => string.Format(SourceConstants.GENERATE_HOSTED_SERVICE_SOURCE, className),
