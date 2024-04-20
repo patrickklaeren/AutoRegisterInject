@@ -199,7 +199,6 @@ public class Generator : IIncrementalGenerator
                 AutoRegistrationType.TrySingleton
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_SINGLETON_INTERFACE_SOURCE, d, className))),
                 
-                // TODO Refactor string Format calls to support keys
                 AutoRegistrationType.KeyedScoped when isServiceKeyEmptyOrNull 
                     => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.KeyedScoped))),
                 AutoRegistrationType.KeyedScoped when !hasInterfaces
