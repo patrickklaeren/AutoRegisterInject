@@ -30,6 +30,7 @@ public class Generator : IIncrementalGenerator
     private const string TRY_KEYED_TRANSIENT_ATTRIBUTE_NAME = "TryRegisterKeyedTransientAttribute";
 
     private const string ONLY_REGISTER_AS = "onlyRegisterAs";
+    private static readonly string KeyedServiceExceptionFormattedMessage = "{0} requires a service key to be passed as an argument. Service Key argument was null, empty, or whitespace.";
 
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
     {
@@ -103,9 +104,15 @@ public class Generator : IIncrementalGenerator
                     var attributeData = symbol.GetFirstAutoRegisterAttribute(fullyQualifiedAttributeName);
 
                     string[] registerAs;
-                    
-                    if (attributeData?.AttributeConstructor?.Parameters.Length > 0
-                        && attributeData.GetIgnoredTypeNames(ONLY_REGISTER_AS) is { Length: > 0 } onlyRegisterAs)
+                    string serviceKey = string.Empty;
+
+                    if (attributeData?.AttributeConstructor?.Parameters.Length > 0 &&
+                        attributeData?.AttributeConstructor?.Parameters.Any(a => a.Name == "ServiceKey") is true)
+                    {
+                        serviceKey = attributeData?.ConstructorArguments.First().Value?.ToString();
+                    }
+
+                    if (attributeData?.AttributeConstructor?.Parameters.Length > 0 && attributeData.GetIgnoredTypeNames(ONLY_REGISTER_AS) is { Length: > 0 } onlyRegisterAs)
                     {
                         registerAs = symbol!
                         .AllInterfaces
@@ -122,10 +129,11 @@ public class Generator : IIncrementalGenerator
                         .ToArray();
                     }
 
-                    return new AutoRegisteredClass(typeName,
+                    return new AutoRegisteredClass(
+                        typeName,
                         registrationType,
                         registerAs,
-                        string.Empty);
+                        serviceKey);
                 }
             }
         }
@@ -146,18 +154,18 @@ public class Generator : IIncrementalGenerator
         // use another source generator that makes a partial class/file
         // TODO: Refactor below into more readable code, not everything should be one line of code!
         var registrations = classes
-            .GroupBy(x => new { x.ClassName, x.RegistrationType })
-            .Select(x => GetRegistration(x.Key.RegistrationType,
-                x.Key.ClassName, x.SelectMany(d => d.Interfaces).ToArray()));
+            .GroupBy(x => new { x.ClassName, x.RegistrationType, x.ServiceKey })
+            .Select(x => GetRegistration(x.Key.RegistrationType, x.Key.ClassName, x.SelectMany(d => d.Interfaces).ToArray(), x.Key.ServiceKey));
 
         var formatted = string.Join(Environment.NewLine, registrations);
         var output = SourceConstants.GENERATE_CLASS_SOURCE.Replace("{0}", assemblyNameForMethod).Replace("{1}", formatted);
         context.AddSource("AutoRegisterInject.ServiceCollectionExtension.g.cs", SourceText.From(output, Encoding.UTF8));
         return;
 
-        string GetRegistration(AutoRegistrationType type, string className, string[] interfaces)
+        string GetRegistration(AutoRegistrationType type, string className, string[] interfaces, string? serviceKey)
         {
             var hasInterfaces = interfaces.Any();
+            var isServiceKeyEmptyOrNull = string.IsNullOrWhiteSpace(serviceKey);
 
             return type switch
             {
@@ -192,35 +200,47 @@ public class Generator : IIncrementalGenerator
                     => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_SINGLETON_INTERFACE_SOURCE, d, className))),
                 
                 // TODO Refactor string Format calls to support keys
+                AutoRegistrationType.KeyedScoped when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.KeyedScoped))),
                 AutoRegistrationType.KeyedScoped when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_SOURCE, className, serviceKey),
                 AutoRegistrationType.KeyedScoped
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SCOPED_INTERFACE_SOURCE, d, className, serviceKey))),
                 
+                AutoRegistrationType.KeyedSingleton when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.KeyedSingleton))),
                 AutoRegistrationType.KeyedSingleton when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_SOURCE, className, serviceKey),
                 AutoRegistrationType.KeyedSingleton
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE, d, className, serviceKey))),
                 
+                AutoRegistrationType.KeyedTransient when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.KeyedTransient))),
                 AutoRegistrationType.KeyedTransient when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_SOURCE, className, serviceKey),
                 AutoRegistrationType.KeyedTransient
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className, serviceKey))),
                 
+                AutoRegistrationType.TryKeyedScoped when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.TryKeyedScoped))),
                 AutoRegistrationType.TryKeyedScoped when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_SOURCE, className, serviceKey),
                 AutoRegistrationType.TryKeyedScoped
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE, d, className, serviceKey))),
                 
+                AutoRegistrationType.TryKeyedSingleton when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.TryKeyedSingleton))),
                 AutoRegistrationType.TryKeyedSingleton when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_SOURCE, className, serviceKey),
                 AutoRegistrationType.TryKeyedSingleton
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE, d, className, serviceKey))),
                 
+                AutoRegistrationType.TryKeyedTransient when isServiceKeyEmptyOrNull 
+                    => throw new ArgumentException(string.Format(KeyedServiceExceptionFormattedMessage, nameof(AutoRegistrationType.TryKeyedTransient))),
                 AutoRegistrationType.TryKeyedTransient when !hasInterfaces
-                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_SOURCE, className),
+                    => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_SOURCE, className, serviceKey),
                 AutoRegistrationType.TryKeyedTransient
-                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className))),
+                    => string.Join(Environment.NewLine, interfaces.Select(d => string.Format(SourceConstants.GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE, d, className, serviceKey))),
 
                 AutoRegistrationType.Hosted // Hosted services do not support interfaces at this time
                     => string.Format(SourceConstants.GENERATE_HOSTED_SERVICE_SOURCE, className),

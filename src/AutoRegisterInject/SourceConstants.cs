@@ -15,7 +15,7 @@ internal sealed class RegisterScopedAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedScopedAttribute : System.Attribute
 { 
-    internal RegisterKeyedScopedAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedScopedAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -27,7 +27,7 @@ internal sealed class TryRegisterScopedAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedScopedAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedScopedAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedScopedAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -39,7 +39,7 @@ internal sealed class RegisterSingletonAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedSingletonAttribute : System.Attribute
 { 
-    internal RegisterKeyedSingletonAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedSingletonAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -51,7 +51,7 @@ internal sealed class TryRegisterSingletonAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedSingletonAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedSingletonAttribute(string Key, params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedSingletonAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -63,7 +63,7 @@ internal sealed class RegisterTransientAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedTransientAttribute : System.Attribute
 { 
-    internal RegisterKeyedTransientAttribute(params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedTransientAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -75,7 +75,7 @@ internal sealed class TryRegisterTransientAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedTransientAttribute(params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedTransientAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -86,30 +86,30 @@ internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
     internal static string GENERATE_KEYED_SCOPED_SOURCE = @"serviceCollection.AddKeyedScoped<{0}>(""{1}"");";
     internal static string GENERATE_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.AddKeyedScoped<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_SCOPED_SOURCE = "_ = serviceCollection.TryAddScoped<{0}>();";
-    internal static string GENERATE_TRY_SCOPED_INTERFACE_SOURCE = "_ = serviceCollection.TryAddScoped<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_SCOPED_SOURCE = @"_ = serviceCollection.TryAddKeyedScoped<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE = @"_ = serviceCollection.TryAddKeyedScoped<{0}, {1}>(""{2}"");";
+    internal static string GENERATE_TRY_SCOPED_SOURCE = "serviceCollection.TryAddScoped<{0}>();";
+    internal static string GENERATE_TRY_SCOPED_INTERFACE_SOURCE = "serviceCollection.TryAddScoped<{0}, {1}>();";
+    internal static string GENERATE_TRY_KEYED_SCOPED_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}>(""{1}"");";
+    internal static string GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}, {1}>(""{2}"");";
     
     internal static string GENERATE_SINGLETON_SOURCE = "serviceCollection.AddSingleton<{0}>();";
     internal static string GENERATE_SINGLETON_INTERFACE_SOURCE = "serviceCollection.AddSingleton<{0}, {1}>();";
     internal static string GENERATE_KEYED_SINGLETON_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}>(""{1}"");";
     internal static string GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_SINGLETON_SOURCE = "_ = serviceCollection.TryAddSingleton<{0}>();";
-    internal static string GENERATE_TRY_SINGLETON_INTERFACE_SOURCE = "_ = serviceCollection.TryAddSingleton<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_SINGLETON_SOURCE = @"_ = serviceCollection.TryAddKeyedSingleton<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE = @"_ = serviceCollection.TryAddKeyedSingleton<{0}, {1}>(""{2}"");";
+    internal static string GENERATE_TRY_SINGLETON_SOURCE = "serviceCollection.TryAddSingleton<{0}>();";
+    internal static string GENERATE_TRY_SINGLETON_INTERFACE_SOURCE = "serviceCollection.TryAddSingleton<{0}, {1}>();";
+    internal static string GENERATE_TRY_KEYED_SINGLETON_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}>(""{1}"");";
+    internal static string GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}, {1}>(""{2}"");";
     
     internal static string GENERATE_TRANSIENT_SOURCE = "serviceCollection.AddTransient<{0}>();";
     internal static string GENERATE_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.AddTransient<{0}, {1}>();";
     internal static string GENERATE_KEYED_TRANSIENT_SOURCE = @"serviceCollection.AddKeyedTransient<{0}>(""{1}"");";
     internal static string GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.AddKeyedTransient<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_TRANSIENT_SOURCE = "_ = serviceCollection.TryAddTransient<{0}>();";
-    internal static string GENERATE_TRY_TRANSIENT_INTERFACE_SOURCE = "_ = serviceCollection.TryAddTransient<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_TRANSIENT_SOURCE = @"_ = serviceCollection.TryAddKeyedTransient<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE = @"_ = serviceCollection.TryAddKeyedTransient<{0}, {1}>(""{2}"");";
+    internal static string GENERATE_TRY_TRANSIENT_SOURCE = "serviceCollection.TryAddTransient<{0}>();";
+    internal static string GENERATE_TRY_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.TryAddTransient<{0}, {1}>();";
+    internal static string GENERATE_TRY_KEYED_TRANSIENT_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}>(""{1}"");";
+    internal static string GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}, {1}>(""{2}"");";
     
     internal static string GENERATE_HOSTED_SERVICE_SOURCE = "serviceCollection.AddHostedService<{0}>();";
 
@@ -118,6 +118,7 @@ internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class AutoRegisterInjectServiceCollectionExtension
 {
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFrom{0}(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
