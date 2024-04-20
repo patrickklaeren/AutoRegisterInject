@@ -35,6 +35,7 @@ public interface IBaz { }
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class AutoRegisterInjectServiceCollectionExtension
 {
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
