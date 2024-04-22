@@ -34,12 +34,12 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         TryRegisterScoped, 
         TryRegisterSingleton, 
         TryRegisterTransient, 
-        TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScoped"),
-        TryRegisterKeyedSingleton(ServiceKey: "TryRegisterKeyedSingleton"),
-        TryRegisterKeyedTransient(ServiceKey: "TryRegisterKeyedScoped"),
-        RegisterKeyedScoped(ServiceKey: "RegisterKeyedScoped"),
-        RegisterKeyedSingleton(ServiceKey: "RegisterKeyedSingleton"),
-        RegisterKeyedTransient(ServiceKey: "RegisterKeyedTransient")
+        TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScoped"),
+        TryRegisterKeyedSingleton(serviceKey: "TryRegisterKeyedSingleton"),
+        TryRegisterKeyedTransient(serviceKey: "TryRegisterKeyedScoped"),
+        RegisterKeyedScoped(serviceKey: "RegisterKeyedScoped"),
+        RegisterKeyedSingleton(serviceKey: "RegisterKeyedSingleton"),
+        RegisterKeyedTransient(serviceKey: "RegisterKeyedTransient")
     ]
     public class MultipleRegisterTest
     {
@@ -82,37 +82,37 @@ namespace AutoRegisterInject.IntegrationTest.Project1
 
     }
     
-    [TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScoped")]
+    [TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScoped")]
     public class TryKeyedScopedTest
     {
 
     }
 
-    [TryRegisterKeyedSingleton(ServiceKey: "TryRegisterKeyedSingleton")]
+    [TryRegisterKeyedSingleton(serviceKey: "TryRegisterKeyedSingleton")]
     public class TryKeyedSingletonTest
     {
 
     }
 
-    [TryRegisterKeyedTransient(ServiceKey: "TryRegisterKeyedScoped")]
+    [TryRegisterKeyedTransient(serviceKey: "TryRegisterKeyedScoped")]
     public class TryKeyedTransientTest
     {
 
     }
     
-    [RegisterKeyedScoped(ServiceKey: "RegisterKeyedScoped")]
+    [RegisterKeyedScoped(serviceKey: "RegisterKeyedScoped")]
     public class KeyedScopedTest
     {
 
     }
 
-    [RegisterKeyedSingleton(ServiceKey: "RegisterKeyedSingleton")]
+    [RegisterKeyedSingleton(serviceKey: "RegisterKeyedSingleton")]
     public class KeyedSingletonTest
     {
 
     }
 
-    [RegisterKeyedTransient(ServiceKey: "RegisterKeyedTransient")]
+    [RegisterKeyedTransient(serviceKey: "RegisterKeyedTransient")]
     public class KeyedTransientTest
     {
 
@@ -135,13 +135,13 @@ namespace AutoRegisterInject.IntegrationTest.Project1
 
     }
     
-    [TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScopedInterface")]
+    [TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScopedInterface")]
     public class TryRegisterKeyedScopedInterfaceTest : IInterfaceTest
     {
 
     }
     
-    [RegisterKeyedScoped(ServiceKey: "RegisterKeyedScopedInterface")]
+    [RegisterKeyedScoped(serviceKey: "RegisterKeyedScopedInterface")]
     public class RegisterKeyedScopedInterfaceTest : IInterfaceTest
     {
 
@@ -180,7 +180,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScopedMultipleInterface")]
+    [TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScopedMultipleInterface")]
     public class TryRegisterKeyedMultiInterfaceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable
     {
         public void Dispose()
@@ -194,7 +194,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [RegisterKeyedScoped(ServiceKey: "RegisterKeyedScopedMultipleInterface")]
+    [RegisterKeyedScoped(serviceKey: "RegisterKeyedScopedMultipleInterface")]
     public class RegisterKeyedMultiInterfaceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable
     {
         public void Dispose()
@@ -242,7 +242,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScopedMultipleInterfaceSingleIgnore", onlyRegisterAs: typeof(IIgnore))]
+    [TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScopedMultipleInterfaceSingleIgnore", onlyRegisterAs: typeof(IIgnore))]
     public class TryRegisterKeyedScopedMultiInterfaceIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
     {
         public void Dispose()
@@ -256,7 +256,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [RegisterKeyedScoped(ServiceKey: "RegisterKeyedScopedMultipleInterfaceSingleIgnore", onlyRegisterAs: typeof(IIgnore))]
+    [RegisterKeyedScoped(serviceKey: "RegisterKeyedScopedMultipleInterfaceSingleIgnore", onlyRegisterAs: typeof(IIgnore))]
     public class RegisterKeyedScopedMultiInterfaceIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
     {
         public void Dispose()
@@ -300,7 +300,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [TryRegisterKeyedScoped(ServiceKey: "TryRegisterKeyedScopedMultipleInterfaceMultipleIgnore", typeof(IIgnore), typeof(IInterfaceTest))]
+    [TryRegisterKeyedScoped(serviceKey: "TryRegisterKeyedScopedMultipleInterfaceMultipleIgnore", typeof(IIgnore), typeof(IInterfaceTest))]
     public class TryRegisterKeyedScopedMultiInterfaceMultiIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
     {
         public void Dispose()
@@ -314,7 +314,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         }
     }
     
-    [RegisterKeyedScoped(ServiceKey: "RegisterKeyedScopedMultipleInterfaceMultipleIgnore", typeof(IIgnore), typeof(IInterfaceTest))]
+    [RegisterKeyedScoped(serviceKey: "RegisterKeyedScopedMultipleInterfaceMultipleIgnore", typeof(IIgnore), typeof(IInterfaceTest))]
     public class RegisterKeyedScopedMultiInterfaceMultiIgnoranceTest : IInterfaceTest, IMultiInterfaceTest, IDisposable, IAsyncDisposable, IIgnore
     {
         public void Dispose()

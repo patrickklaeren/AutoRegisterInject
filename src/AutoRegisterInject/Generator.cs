@@ -30,6 +30,8 @@ public class Generator : IIncrementalGenerator
     private const string TRY_KEYED_TRANSIENT_ATTRIBUTE_NAME = "TryRegisterKeyedTransientAttribute";
 
     private const string ONLY_REGISTER_AS = "onlyRegisterAs";
+    private const string SERVICE_KEY = "serviceKey"; 
+    
     private static readonly string KeyedServiceExceptionFormattedMessage = "{0} requires a service key to be passed as an argument. Service Key argument was null, empty, or whitespace.";
 
     private static readonly Dictionary<string, AutoRegistrationType> RegistrationTypes = new()
@@ -107,7 +109,7 @@ public class Generator : IIncrementalGenerator
                     string serviceKey = string.Empty;
 
                     if (attributeData?.AttributeConstructor?.Parameters.Length > 0 &&
-                        attributeData?.AttributeConstructor?.Parameters.Any(a => a.Name == "ServiceKey") is true)
+                        attributeData?.AttributeConstructor?.Parameters.Any(a => a.Name == SERVICE_KEY) is true)
                     {
                         serviceKey = attributeData?.ConstructorArguments.First().Value?.ToString();
                     }

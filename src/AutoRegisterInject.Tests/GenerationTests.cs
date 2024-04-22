@@ -27,7 +27,7 @@ internal sealed class RegisterScopedAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedScopedAttribute : System.Attribute
 { 
-    internal RegisterKeyedScopedAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedScopedAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -39,7 +39,7 @@ internal sealed class TryRegisterScopedAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedScopedAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedScopedAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedScopedAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -51,7 +51,7 @@ internal sealed class RegisterSingletonAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedSingletonAttribute : System.Attribute
 { 
-    internal RegisterKeyedSingletonAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedSingletonAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -63,7 +63,7 @@ internal sealed class TryRegisterSingletonAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedSingletonAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedSingletonAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedSingletonAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -75,7 +75,7 @@ internal sealed class RegisterTransientAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterKeyedTransientAttribute : System.Attribute
 { 
-    internal RegisterKeyedTransientAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal RegisterKeyedTransientAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -87,7 +87,7 @@ internal sealed class TryRegisterTransientAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
 { 
-    internal TryRegisterKeyedTransientAttribute(string ServiceKey, params System.Type[] onlyRegisterAs) { }
+    internal TryRegisterKeyedTransientAttribute(string serviceKey, params System.Type[] onlyRegisterAs) { }
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
