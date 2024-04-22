@@ -45,6 +45,16 @@ Classes should be decorated with one of four attributes:
 - `[RegisterTransient]`
 - `[RegisterHostedService]`
 
+Variants for keyed and the service `Try` register pattern are also available:
+- `[TryRegisterScoped]`
+- `[TryRegisterSingleton]`
+- `[TryRegisterTransient]`
+- `[RegisterKeyedScoped]`
+- `[RegisterKeyedSingleton]`
+- `[RegisterKeyedTransient]`
+
+Each keyed attribute has a `Try` counterpart.
+
 Register a class:
 
 ```cs
