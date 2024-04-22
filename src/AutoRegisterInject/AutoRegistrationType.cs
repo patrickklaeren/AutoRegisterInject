@@ -5,5 +5,14 @@ internal enum AutoRegistrationType
     Scoped,
     Singleton,
     Transient,
-    Hosted
+    Hosted,
+    KeyedScoped,
+    KeyedSingleton,
+    KeyedTransient,
+    TryScoped,
+    TrySingleton,
+    TryTransient,
+    TryKeyedScoped,
+    TryKeyedSingleton,
+    TryKeyedTransient
 }

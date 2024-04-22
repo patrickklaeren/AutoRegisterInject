@@ -23,6 +23,7 @@ public class Foo : IHostedService
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class AutoRegisterInjectServiceCollectionExtension
 {
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
@@ -61,6 +62,7 @@ public interface IFoo { }
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class AutoRegisterInjectServiceCollectionExtension
 {
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
@@ -97,6 +99,7 @@ public class Foo : BackgroundService
 //     Changes made to this file may be lost and may cause undesirable behaviour.
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class AutoRegisterInjectServiceCollectionExtension
 {
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
