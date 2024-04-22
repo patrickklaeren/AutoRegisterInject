@@ -27,6 +27,15 @@ public class Baz { }
 [RegisterSingleton]
 public class Bang : IBaz { }
 
+[TryRegisterScoped]
+public class Far { }
+
+[RegisterKeyedTransient(serviceKey: ""MyFazKey"")]
+public class Faz { }
+
+[TryRegisterKeyedSingleton(serviceKey: ""MyFangKey"")]
+public class Fang : IBaz { }
+
 public interface IBaz { }
 ";
 
@@ -49,6 +58,9 @@ public static class AutoRegisterInjectServiceCollectionExtension
 serviceCollection.AddScoped<Bar>();
 serviceCollection.AddTransient<Baz>();
 serviceCollection.AddSingleton<IBaz, Bang>();
+serviceCollection.TryAddScoped<Far>();
+serviceCollection.AddKeyedTransient<Faz>(""MyFazKey"");
+serviceCollection.TryAddKeyedSingleton<IBaz, Fang>(""MyFangKey"");
         return serviceCollection;
     }
 }";
