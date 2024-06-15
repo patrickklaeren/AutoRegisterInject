@@ -164,7 +164,7 @@ public class Generator : IIncrementalGenerator
         context.AddSource("AutoRegisterInject.ServiceCollectionExtension.g.cs", SourceText.From(output, Encoding.UTF8));
         return;
 
-        string GetRegistration(AutoRegistrationType type, string className, string[] interfaces, string? serviceKey)
+        string GetRegistration(AutoRegistrationType type, string className, string[] interfaces, string serviceKey)
         {
             var hasInterfaces = interfaces.Any();
             var isServiceKeyEmptyOrNull = string.IsNullOrWhiteSpace(serviceKey);
