@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths-ignore:
       - "*.md"
+      - ".github/workflows/*.yml"
 
 jobs:
   build:
@@ -22,6 +23,7 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release
       - name: Push to Nuget
+        if: github.ref == 'refs/heads/main'
         env:
           NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
         run: dotnet nuget push --api-key $NUGET_TOKEN --source https://api.nuget.org/v3/index.json ./src/AutoRegisterInject/bin/Release/*.nupkg
