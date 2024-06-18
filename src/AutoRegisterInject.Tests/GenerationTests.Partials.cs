@@ -18,13 +18,29 @@ public partial class Bar { }
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
+/// <summary>
+/// AutoRegisterInject service collection extensions  
+/// </summary>
 public static class AutoRegisterInjectServiceCollectionExtension
 {
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection from the named assembly
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         return AutoRegister(serviceCollection);
     }
 
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<Bar>();
@@ -50,13 +66,29 @@ public partial class Bar { }
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
+/// <summary>
+/// AutoRegisterInject service collection extensions  
+/// </summary>
 public static class AutoRegisterInjectServiceCollectionExtension
 {
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection from the named assembly
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         return AutoRegister(serviceCollection);
     }
 
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<Bar>();
@@ -83,13 +115,29 @@ public interface IBar { }
 // </auto-generated>
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
+/// <summary>
+/// AutoRegisterInject service collection extensions  
+/// </summary>
 public static class AutoRegisterInjectServiceCollectionExtension
 {
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection from the named assembly
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     public static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegisterFromTestProject(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         return AutoRegister(serviceCollection);
     }
 
+    /// <summary>
+    /// Adds all types registered with AutoRegisterInject attributes to the given
+    /// service collection
+    /// </summary>
+    /// <param name=""serviceCollection"">Service collection to register types with</param>
+    /// <returns>Service collection with registered types</returns>
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IBar, Bar>();
