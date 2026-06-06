@@ -79,7 +79,10 @@ internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
+internal sealed class RegisterHostedServiceAttribute : System.Attribute { }
+
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class AutoInterfaceAttribute : System.Attribute { }";
 
     internal const string GENERATE_SCOPED_SOURCE = "serviceCollection.AddScoped<{0}>();";
     internal const string GENERATE_SCOPED_INTERFACE_SOURCE = "serviceCollection.AddScoped<{0}, {1}>();";

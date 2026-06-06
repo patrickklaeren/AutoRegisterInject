@@ -86,9 +86,15 @@ internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
 }
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
+internal sealed class RegisterHostedServiceAttribute : System.Attribute { }
 
-    private static async Task RunGenerator(string sourceInput, string expectedSourceOutput)
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class AutoInterfaceAttribute : System.Attribute { }";
+
+    private static async Task RunGenerator(
+        string sourceInput,
+        string expectedSourceOutput,
+        params (string HintName, string Source)[] additionalGeneratedSources)
     {
         var compilation = CSharpCompilation.Create(
             assemblyName: "TestProject",
@@ -107,6 +113,11 @@ internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
         var generatedSources = Assert.Single(runResult.Results).GeneratedSources;
         AssertGeneratedSource(generatedSources, "AutoRegisterInject.Attributes.g.cs", ATTRIBUTE_SOURCE_OUTPUT);
         AssertGeneratedSource(generatedSources, "AutoRegisterInject.ServiceCollectionExtension.g.cs", expectedSourceOutput);
+
+        foreach (var additionalGeneratedSource in additionalGeneratedSources)
+        {
+            AssertGeneratedSource(generatedSources, additionalGeneratedSource.HintName, additionalGeneratedSource.Source);
+        }
 
         var compilationDiagnostics = outputCompilation
             .GetDiagnostics()

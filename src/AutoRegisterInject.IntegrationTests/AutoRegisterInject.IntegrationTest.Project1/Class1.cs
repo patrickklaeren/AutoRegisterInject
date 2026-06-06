@@ -327,4 +327,16 @@ namespace AutoRegisterInject.IntegrationTest.Project1
             return new ValueTask();
         }
     }
+
+    [AutoInterface]
+    public class AutomaticInterfaceTest : IAutomaticInterfaceTest
+    {
+        
+    }
+
+    [AutoInterface, RegisterScoped]
+    public class AutomaticInterfaceRegistrationTest : IAutomaticInterfaceRegistrationTest
+    {
+        
+    }
 }

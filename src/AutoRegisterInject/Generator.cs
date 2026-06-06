@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Immutable;
 using System;
+using System.Collections.Generic;
 
 namespace AutoRegisterInject;
 
@@ -15,6 +16,7 @@ public class Generator : IIncrementalGenerator
     private const string SINGLETON_ATTRIBUTE_NAME = "RegisterSingletonAttribute";
     private const string TRANSIENT_ATTRIBUTE_NAME = "RegisterTransientAttribute";
     private const string HOSTED_SERVICE_ATTRIBUTE_NAME = "RegisterHostedServiceAttribute";
+    private const string AUTO_INTERFACE_ATTRIBUTE_NAME = "AutoInterfaceAttribute";
     
     private const string KEYED_SCOPED_ATTRIBUTE_NAME = "RegisterKeyedScopedAttribute";
     private const string KEYED_SINGLETON_ATTRIBUTE_NAME = "RegisterKeyedSingletonAttribute";
@@ -53,7 +55,7 @@ public class Generator : IIncrementalGenerator
                 SourceText.From(SourceConstants.GENERATE_ATTRIBUTE_SOURCE, Encoding.UTF8));
         });
 
-        var registrations = CombineRegistrations(
+        var autoRegisters = CombineRegistrations(
             CreateRegistrationProvider(initialisationContext, SCOPED_ATTRIBUTE_NAME, AutoRegistrationType.Scoped),
             CreateRegistrationProvider(initialisationContext, KEYED_SCOPED_ATTRIBUTE_NAME, AutoRegistrationType.KeyedScoped),
             CreateRegistrationProvider(initialisationContext, TRY_SCOPED_ATTRIBUTE_NAME, AutoRegistrationType.TryScoped),
@@ -68,12 +70,31 @@ public class Generator : IIncrementalGenerator
             CreateRegistrationProvider(initialisationContext, TRY_KEYED_TRANSIENT_ATTRIBUTE_NAME, AutoRegistrationType.TryKeyedTransient),
             CreateRegistrationProvider(initialisationContext, HOSTED_SERVICE_ATTRIBUTE_NAME, AutoRegistrationType.Hosted));
 
+        var autoInterfaces = initialisationContext.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                AUTO_INTERFACE_ATTRIBUTE_NAME,
+                predicate: static (node, _) => node is ClassDeclarationSyntax,
+                transform: static (attributeContext, _) => GetAutoInterfaces(attributeContext))
+            .SelectMany(static (interfaces, _) => interfaces)
+            .Collect();
+
         var assemblyName = initialisationContext.CompilationProvider
             .Select(static (compilation, _) => compilation.AssemblyName);
 
         initialisationContext.RegisterSourceOutput(
-            assemblyName.Combine(registrations),
+            assemblyName.Combine(autoRegisters),
             static (sourceContext, source) => Execute(source.Left, source.Right, sourceContext));
+
+        initialisationContext.RegisterSourceOutput(autoInterfaces, static (sourceContext, interfaces) =>
+        {
+            foreach (var autoInterface in interfaces
+                .GroupBy(static x => new { x.Namespace, x.InterfaceName })
+                .Select(static x => x.OrderBy(y => y.AttributeStart).First())
+                .OrderBy(static x => x.AttributeStart))
+            {
+                EmitAutoInterface(autoInterface, sourceContext);
+            }
+        });
     }
 
     private static IncrementalValuesProvider<AutoRegisteredClass> CreateRegistrationProvider(
@@ -127,9 +148,7 @@ public class Generator : IIncrementalGenerator
             ? symbol.AllInterfaces
                 .Select(static x => x.ToDisplayString())
                 .Where(interfaceName => onlyRegisterAs.Contains(interfaceName))
-            : symbol.Interfaces
-                .Select(static x => x.ToDisplayString())
-                .Where(static interfaceName => !IgnoredInterfaces.Contains(interfaceName));
+            : GetRegistrationInterfaces(symbol, context);
 
         var registrations = interfaces
             .Select(interfaceName => CreateRegistration(typeName, registrationType, interfaceName, serviceKey, context))
@@ -138,6 +157,139 @@ public class Generator : IIncrementalGenerator
         return registrations.Length > 0
             ? registrations
             : ImmutableArray.Create(CreateRegistration(typeName, registrationType, string.Empty, serviceKey, context));
+    }
+
+    private static ImmutableArray<AutoInterface> GetAutoInterfaces(GeneratorAttributeSyntaxContext context)
+    {
+        if (context.TargetSymbol is not INamedTypeSymbol symbol || context.TargetNode is not ClassDeclarationSyntax classDeclaration)
+        {
+            return ImmutableArray<AutoInterface>.Empty;
+        }
+
+        var interfaceNames = GetAutoInterfaceNames(symbol, classDeclaration);
+        if (interfaceNames.Length == 0)
+        {
+            return ImmutableArray<AutoInterface>.Empty;
+        }
+
+        var namespaceName = symbol.ContainingNamespace?.IsGlobalNamespace is false
+            ? symbol.ContainingNamespace.ToDisplayString()
+            : string.Empty;
+        var accessibility = symbol.DeclaredAccessibility == Accessibility.Public ? "public" : "internal";
+        var membersSource = GetInterfaceMembersSource(symbol);
+        var attributeStart = context.Attributes[0].ApplicationSyntaxReference?.Span.Start ?? context.TargetNode.SpanStart;
+
+        return interfaceNames
+            .Select(interfaceName => new AutoInterface(namespaceName, interfaceName, accessibility, membersSource, attributeStart))
+            .ToImmutableArray();
+    }
+
+    private static IEnumerable<string> GetRegistrationInterfaces(INamedTypeSymbol symbol, GeneratorAttributeSyntaxContext context)
+    {
+        var interfaces = symbol.Interfaces
+            .Select(static x => x.ToDisplayString())
+            .Where(static interfaceName => !IgnoredInterfaces.Contains(interfaceName));
+
+        if (HasAutoInterfaceAttribute(symbol) && context.TargetNode is ClassDeclarationSyntax classDeclaration)
+        {
+            interfaces = interfaces.Concat(GetAutoInterfaceTypeNames(symbol, classDeclaration));
+        }
+
+        return interfaces.Distinct();
+    }
+
+    private static IEnumerable<string> GetAutoInterfaceTypeNames(INamedTypeSymbol symbol, ClassDeclarationSyntax classDeclaration)
+    {
+        var namespaceName = symbol.ContainingNamespace?.IsGlobalNamespace is false
+            ? symbol.ContainingNamespace.ToDisplayString()
+            : string.Empty;
+
+        return GetAutoInterfaceNames(symbol, classDeclaration)
+            .Select(interfaceName => string.IsNullOrWhiteSpace(namespaceName)
+                ? interfaceName
+                : $"{namespaceName}.{interfaceName}");
+    }
+
+    private static ImmutableArray<string> GetAutoInterfaceNames(INamedTypeSymbol symbol, ClassDeclarationSyntax classDeclaration)
+    {
+        if (classDeclaration.BaseList is null)
+        {
+            return ImmutableArray<string>.Empty;
+        }
+
+        var resolvedInterfaces = symbol.AllInterfaces
+            .Where(static x => x.TypeKind == TypeKind.Interface)
+            .Select(static x => x.Name)
+            .ToArray();
+
+        return classDeclaration.BaseList.Types
+            .Select(static baseType => GetSimpleTypeName(baseType.Type))
+            .Where(static name => name is { Length: > 0 } && name[0] == 'I')
+            .Where(name => !resolvedInterfaces.Contains(name))
+            .Distinct()
+            .ToImmutableArray();
+    }
+
+    private static string GetSimpleTypeName(TypeSyntax type)
+    {
+        return type switch
+        {
+            IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+            QualifiedNameSyntax qualifiedName => qualifiedName.Right.Identifier.ValueText,
+            AliasQualifiedNameSyntax aliasQualifiedName => aliasQualifiedName.Name.Identifier.ValueText,
+            _ => null,
+        };
+    }
+
+    private static string GetInterfaceMembersSource(INamedTypeSymbol symbol)
+    {
+        var members = symbol
+            .GetMembers()
+            .Select(GetInterfaceMemberSource)
+            .Where(static source => !string.IsNullOrWhiteSpace(source))
+            .ToArray();
+
+        return string.Join(Environment.NewLine, members);
+    }
+
+    private static string GetInterfaceMemberSource(ISymbol member)
+    {
+        if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic)
+        {
+            return null;
+        }
+
+        return member switch
+        {
+            IMethodSymbol { MethodKind: MethodKind.Ordinary } method => GetMethodSource(method),
+            IPropertySymbol property => GetPropertySource(property),
+            IEventSymbol @event => GetEventSource(@event),
+            _ => null,
+        };
+    }
+
+    private static string GetMethodSource(IMethodSymbol method)
+    {
+        var returnType = method.ReturnType.ToDisplayString();
+        var parameters = string.Join(", ", method.Parameters.Select(static parameter => $"{parameter.Type.ToDisplayString()} {parameter.Name}"));
+
+        return $"    {returnType} {method.Name}({parameters});";
+    }
+
+    private static string GetPropertySource(IPropertySymbol property)
+    {
+        var accessors = property.SetMethod is null ? "get;" : "get; set;";
+        return $"    {property.Type.ToDisplayString()} {property.Name} {{ {accessors} }}";
+    }
+
+    private static string GetEventSource(IEventSymbol @event)
+    {
+        return $"    event {@event.Type.ToDisplayString()} {@event.Name};";
+    }
+
+    private static bool HasAutoInterfaceAttribute(ISymbol symbol)
+    {
+        return symbol.GetAttributes().Any(static attribute => attribute.AttributeClass?.Name == AUTO_INTERFACE_ATTRIBUTE_NAME);
     }
 
     private static AutoRegisteredClass CreateRegistration(
@@ -293,6 +445,31 @@ public class Generator : IIncrementalGenerator
                 _ => throw new NotImplementedException("Auto registration type not set up to output"),
             };
         }
+    }
+
+    private static void EmitAutoInterface(AutoInterface autoInterface, SourceProductionContext context)
+    {
+        var source = string.IsNullOrWhiteSpace(autoInterface.Namespace)
+            ? $@"// <auto-generated>
+//     Automatically generated by AutoRegisterInject.
+//     Changes made to this file may be lost and may cause undesirable behaviour.
+// </auto-generated>
+{autoInterface.Accessibility} interface {autoInterface.InterfaceName}
+{{
+{autoInterface.MembersSource}
+}}"
+            : $@"// <auto-generated>
+//     Automatically generated by AutoRegisterInject.
+//     Changes made to this file may be lost and may cause undesirable behaviour.
+// </auto-generated>
+namespace {autoInterface.Namespace};
+
+{autoInterface.Accessibility} interface {autoInterface.InterfaceName}
+{{
+{autoInterface.MembersSource}
+}}";
+
+        context.AddSource($"AutoRegisterInject.{autoInterface.InterfaceName}.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     private static int GetParameterIndex(AttributeData attributeData, string parameterName)

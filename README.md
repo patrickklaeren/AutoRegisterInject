@@ -125,6 +125,38 @@ serviceCollection.AddTransient<IBaz, Bar>();
 
 **Important note:** AutoRegisterInject is opinionated and `Bar` will only be registered with its implemented interfaces. ARI will **not** register `Bar`. `Bar` will always need to be resolved from `IBar`, `IFoo` or `IBaz` in your code.
 
+### Generate interfaces
+
+ARI can also generate an interface for a type by decorating it with `[AutoInterface]` and declaring the interface on the class:
+
+```cs
+[AutoInterface]
+[RegisterScoped]
+public class Foo : IFoo
+{
+    public string Name { get; set; }
+    public void Run() { }
+}
+```
+
+will generate:
+
+```cs
+public interface IFoo
+{
+    string Name { get; set; }
+    void Run();
+}
+```
+
+and because `Foo` implements `IFoo`, ARI will register it as an interface registration:
+
+```cs
+serviceCollection.AddScoped<IFoo, Foo>();
+```
+
+This works with namespaced types and the standard registration attributes.
+
 ### Multiple assemblies
 
 In addition to the `AutoRegister` extension method, every assembly that AutoRegisterInject is a part of, a `AutoRegisterFromAssemblyName` will be generated. This allows you to configure your service collection from one, main, executing assembly.
