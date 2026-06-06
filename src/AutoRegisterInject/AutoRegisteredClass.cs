@@ -1,3 +1,9 @@
 ﻿namespace AutoRegisterInject;
 
-internal record AutoRegisteredClass(string ClassName, AutoRegistrationType RegistrationType, string[] Interfaces, string ServiceKey);
+internal readonly record struct AutoRegisteredClass(
+    string ClassName,
+    AutoRegistrationType RegistrationType,
+    string InterfaceName,
+    string ServiceKey,
+    int ClassDeclarationStart,
+    int AttributeStart);

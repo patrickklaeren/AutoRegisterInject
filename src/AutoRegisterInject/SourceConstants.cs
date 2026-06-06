@@ -81,37 +81,37 @@ internal sealed class TryRegisterKeyedTransientAttribute : System.Attribute
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal sealed class RegisterHostedServiceAttribute : System.Attribute { }";
 
-    internal static string GENERATE_SCOPED_SOURCE = "serviceCollection.AddScoped<{0}>();";
-    internal static string GENERATE_SCOPED_INTERFACE_SOURCE = "serviceCollection.AddScoped<{0}, {1}>();";
-    internal static string GENERATE_KEYED_SCOPED_SOURCE = @"serviceCollection.AddKeyedScoped<{0}>(""{1}"");";
-    internal static string GENERATE_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.AddKeyedScoped<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_SCOPED_SOURCE = "serviceCollection.AddScoped<{0}>();";
+    internal const string GENERATE_SCOPED_INTERFACE_SOURCE = "serviceCollection.AddScoped<{0}, {1}>();";
+    internal const string GENERATE_KEYED_SCOPED_SOURCE = @"serviceCollection.AddKeyedScoped<{0}>(""{1}"");";
+    internal const string GENERATE_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.AddKeyedScoped<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_SCOPED_SOURCE = "serviceCollection.TryAddScoped<{0}>();";
-    internal static string GENERATE_TRY_SCOPED_INTERFACE_SOURCE = "serviceCollection.TryAddScoped<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_SCOPED_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_TRY_SCOPED_SOURCE = "serviceCollection.TryAddScoped<{0}>();";
+    internal const string GENERATE_TRY_SCOPED_INTERFACE_SOURCE = "serviceCollection.TryAddScoped<{0}, {1}>();";
+    internal const string GENERATE_TRY_KEYED_SCOPED_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}>(""{1}"");";
+    internal const string GENERATE_TRY_KEYED_SCOPED_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedScoped<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_SINGLETON_SOURCE = "serviceCollection.AddSingleton<{0}>();";
-    internal static string GENERATE_SINGLETON_INTERFACE_SOURCE = "serviceCollection.AddSingleton<{0}, {1}>();";
-    internal static string GENERATE_KEYED_SINGLETON_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}>(""{1}"");";
-    internal static string GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_SINGLETON_SOURCE = "serviceCollection.AddSingleton<{0}>();";
+    internal const string GENERATE_SINGLETON_INTERFACE_SOURCE = "serviceCollection.AddSingleton<{0}, {1}>();";
+    internal const string GENERATE_KEYED_SINGLETON_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}>(""{1}"");";
+    internal const string GENERATE_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.AddKeyedSingleton<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_SINGLETON_SOURCE = "serviceCollection.TryAddSingleton<{0}>();";
-    internal static string GENERATE_TRY_SINGLETON_INTERFACE_SOURCE = "serviceCollection.TryAddSingleton<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_SINGLETON_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_TRY_SINGLETON_SOURCE = "serviceCollection.TryAddSingleton<{0}>();";
+    internal const string GENERATE_TRY_SINGLETON_INTERFACE_SOURCE = "serviceCollection.TryAddSingleton<{0}, {1}>();";
+    internal const string GENERATE_TRY_KEYED_SINGLETON_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}>(""{1}"");";
+    internal const string GENERATE_TRY_KEYED_SINGLETON_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedSingleton<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRANSIENT_SOURCE = "serviceCollection.AddTransient<{0}>();";
-    internal static string GENERATE_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.AddTransient<{0}, {1}>();";
-    internal static string GENERATE_KEYED_TRANSIENT_SOURCE = @"serviceCollection.AddKeyedTransient<{0}>(""{1}"");";
-    internal static string GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.AddKeyedTransient<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_TRANSIENT_SOURCE = "serviceCollection.AddTransient<{0}>();";
+    internal const string GENERATE_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.AddTransient<{0}, {1}>();";
+    internal const string GENERATE_KEYED_TRANSIENT_SOURCE = @"serviceCollection.AddKeyedTransient<{0}>(""{1}"");";
+    internal const string GENERATE_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.AddKeyedTransient<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_TRY_TRANSIENT_SOURCE = "serviceCollection.TryAddTransient<{0}>();";
-    internal static string GENERATE_TRY_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.TryAddTransient<{0}, {1}>();";
-    internal static string GENERATE_TRY_KEYED_TRANSIENT_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}>(""{1}"");";
-    internal static string GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}, {1}>(""{2}"");";
+    internal const string GENERATE_TRY_TRANSIENT_SOURCE = "serviceCollection.TryAddTransient<{0}>();";
+    internal const string GENERATE_TRY_TRANSIENT_INTERFACE_SOURCE = "serviceCollection.TryAddTransient<{0}, {1}>();";
+    internal const string GENERATE_TRY_KEYED_TRANSIENT_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}>(""{1}"");";
+    internal const string GENERATE_TRY_KEYED_TRANSIENT_INTERFACE_SOURCE = @"serviceCollection.TryAddKeyedTransient<{0}, {1}>(""{2}"");";
     
-    internal static string GENERATE_HOSTED_SERVICE_SOURCE = "serviceCollection.AddHostedService<{0}>();";
+    internal const string GENERATE_HOSTED_SERVICE_SOURCE = "serviceCollection.AddHostedService<{0}>();";
 
     internal const string GENERATE_CLASS_SOURCE = @"// <auto-generated>
 //     Automatically generated by AutoRegisterInject.
