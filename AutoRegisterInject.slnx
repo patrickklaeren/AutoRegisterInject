@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/IntegrationTests/">
+    <Project Path="src/AutoRegisterInject.IntegrationTests/AutoRegisterInject.IntegrationTest.Project1/AutoRegisterInject.IntegrationTest.Project1.csproj" />
+    <Project Path="src/AutoRegisterInject.IntegrationTests/AutoRegisterInject.IntegrationTest.Project2/AutoRegisterInject.IntegrationTest.Project2.csproj" />
+    <Project Path="src/AutoRegisterInject.IntegrationTests/AutoRegisterInject.IntegrationTest.ThirdParty/AutoRegisterInject.IntegrationTest.ThirdParty.csproj" />
+  </Folder>
+  <Project Path="src/AutoRegisterInject.Tests/AutoRegisterInject.Tests.csproj" />
+  <Project Path="src/AutoRegisterInject/AutoRegisterInject.csproj" />
+</Solution>

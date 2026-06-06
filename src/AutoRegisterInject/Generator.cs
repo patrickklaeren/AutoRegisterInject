@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections.Immutable;
 using System.Collections.Generic;
 using System;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoRegisterInject;
 
