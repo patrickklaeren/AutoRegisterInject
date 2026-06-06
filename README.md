@@ -1,5 +1,7 @@
 # AutoRegisterInject
 
+<img src="https://github.com/patrickklaeren/AutoRegisterInject/blob/main/Icon.png?raw=true" alt="Responsive Image" style="width:40%; height:auto;">
+
 AutoRegisterInject, also referred to as ARI, is a C# source generator that will automatically create Microsoft.Extensions.DependencyInjection registrations for types marked with attributes.
 
 This is a compile time alternative to reflection/assembly scanning for your injections or manually adding to the `ServiceCollection` every time a new type needs to be registered.
