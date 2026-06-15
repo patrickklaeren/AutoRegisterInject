@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -338,5 +339,24 @@ namespace AutoRegisterInject.IntegrationTest.Project1
     public class AutomaticInterfaceRegistrationTest : IAutomaticInterfaceRegistrationTest
     {
         
+    }
+
+    [AutoInterface, RegisterScoped]
+    public class AutomaticInterfaceRegistrationWithParametersTest : IAutomaticInterfaceRegistrationWithParametersTest
+    {
+        public void One(bool isDefault = true)
+        {
+            
+        }
+        
+        public void Two<T>(T defaulted)
+        {
+            
+        }
+        
+        public void Three(params string[] args)
+        {
+            
+        }
     }
 }

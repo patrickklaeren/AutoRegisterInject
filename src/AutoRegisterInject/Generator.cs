@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections.Immutable;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace AutoRegisterInject;
 
@@ -271,9 +272,118 @@ public class Generator : IIncrementalGenerator
     private static string GetMethodSource(IMethodSymbol method)
     {
         var returnType = method.ReturnType.ToDisplayString();
-        var parameters = string.Join(", ", method.Parameters.Select(static parameter => $"{parameter.Type.ToDisplayString()} {parameter.Name}"));
+        var typeParameters = method.TypeParameters.Length == 0
+            ? string.Empty
+            : $"<{string.Join(", ", method.TypeParameters.Select(static typeParameter => typeParameter.Name))}>";
+        var parameters = string.Join(", ", method.Parameters.Select(GetParameterSource));
+        var constraints = GetTypeParameterConstraintsSource(method.TypeParameters);
 
-        return $"    {returnType} {method.Name}({parameters});";
+        return $"    {returnType} {method.Name}{typeParameters}({parameters}){constraints};";
+    }
+
+    private static string GetParameterSource(IParameterSymbol parameter)
+    {
+        var modifiers = GetParameterModifiersSource(parameter);
+        var defaultValue = GetParameterDefaultValueSource(parameter);
+
+        return $"{modifiers}{parameter.Type.ToDisplayString()} {parameter.Name}{defaultValue}";
+    }
+
+    private static string GetParameterModifiersSource(IParameterSymbol parameter)
+    {
+        var paramsModifier = parameter.IsParams ? "params " : string.Empty;
+        var refModifier = parameter.RefKind switch
+        {
+            RefKind.Ref => "ref ",
+            RefKind.Out => "out ",
+            RefKind.In => "in ",
+            _ => string.Empty,
+        };
+
+        return paramsModifier + refModifier;
+    }
+
+    private static string GetParameterDefaultValueSource(IParameterSymbol parameter)
+    {
+        var syntax = parameter.DeclaringSyntaxReferences
+            .Select(static reference => reference.GetSyntax())
+            .OfType<ParameterSyntax>()
+            .FirstOrDefault();
+
+        if (syntax?.Default is not null)
+        {
+            return $" = {syntax.Default.Value}";
+        }
+
+        if (!parameter.HasExplicitDefaultValue)
+        {
+            return string.Empty;
+        }
+
+        return parameter.ExplicitDefaultValue is null
+            ? " = null"
+            : $" = {FormatDefaultValue(parameter.ExplicitDefaultValue)}";
+    }
+
+    private static string FormatDefaultValue(object value)
+    {
+        return value switch
+        {
+            bool boolValue => boolValue ? "true" : "false",
+            char charValue => $"'{charValue}'",
+            string stringValue => $"\"{stringValue.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"",
+            float floatValue => $"{floatValue.ToString("R", CultureInfo.InvariantCulture)}F",
+            double doubleValue => $"{doubleValue.ToString("R", CultureInfo.InvariantCulture)}D",
+            decimal decimalValue => $"{decimalValue.ToString(CultureInfo.InvariantCulture)}M",
+            IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
+            _ => value.ToString(),
+        };
+    }
+
+    private static string GetTypeParameterConstraintsSource(ImmutableArray<ITypeParameterSymbol> typeParameters)
+    {
+        var constraints = typeParameters
+            .Select(GetTypeParameterConstraintSource)
+            .Where(static constraint => !string.IsNullOrWhiteSpace(constraint))
+            .ToArray();
+
+        return constraints.Length == 0
+            ? string.Empty
+            : " " + string.Join(" ", constraints);
+    }
+
+    private static string GetTypeParameterConstraintSource(ITypeParameterSymbol typeParameter)
+    {
+        var constraints = new List<string>();
+
+        if (typeParameter.HasUnmanagedTypeConstraint)
+        {
+            constraints.Add("unmanaged");
+        }
+        else if (typeParameter.HasValueTypeConstraint)
+        {
+            constraints.Add("struct");
+        }
+        else if (typeParameter.HasReferenceTypeConstraint)
+        {
+            constraints.Add("class");
+        }
+
+        if (typeParameter.HasNotNullConstraint)
+        {
+            constraints.Add("notnull");
+        }
+
+        constraints.AddRange(typeParameter.ConstraintTypes.Select(static type => type.ToDisplayString()));
+
+        if (typeParameter.HasConstructorConstraint)
+        {
+            constraints.Add("new()");
+        }
+
+        return constraints.Count == 0
+            ? string.Empty
+            : $"where {typeParameter.Name} : {string.Join(", ", constraints)}";
     }
 
     private static string GetPropertySource(IPropertySymbol property)
