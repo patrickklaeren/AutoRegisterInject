@@ -191,7 +191,7 @@ public class Generator : IIncrementalGenerator
             .Select(static x => x.ToDisplayString())
             .Where(static interfaceName => !IgnoredInterfaces.Contains(interfaceName));
 
-        if (HasAutoInterfaceAttribute(symbol) && context.TargetNode is ClassDeclarationSyntax classDeclaration)
+        if (context.TargetNode is ClassDeclarationSyntax classDeclaration)
         {
             interfaces = interfaces.Concat(GetAutoInterfaceTypeNames(symbol, classDeclaration));
         }
@@ -250,7 +250,7 @@ public class Generator : IIncrementalGenerator
             .Where(static source => !string.IsNullOrWhiteSpace(source))
             .ToArray();
 
-        return string.Join(Environment.NewLine, members);
+        return string.Join("\r\n", members);
     }
 
     private static string GetInterfaceMemberSource(ISymbol member)
@@ -397,11 +397,6 @@ public class Generator : IIncrementalGenerator
         return $"    event {@event.Type.ToDisplayString()} {@event.Name};";
     }
 
-    private static bool HasAutoInterfaceAttribute(ISymbol symbol)
-    {
-        return symbol.GetAttributes().Any(static attribute => attribute.AttributeClass?.Name == AUTO_INTERFACE_ATTRIBUTE_NAME);
-    }
-
     private static AutoRegisteredClass CreateRegistration(
         string typeName,
         AutoRegistrationType registrationType,
@@ -471,7 +466,8 @@ public class Generator : IIncrementalGenerator
             .Select(x => GetRegistration(x.RegistrationType, x.ClassName, x.InterfaceName, x.ServiceKey))
             .Where(static x => x is not null);
 
-        var formatted = string.Join(Environment.NewLine, registrations);
+        var indent = new string(' ', 8);
+        var formatted = string.Join("\r\n" + indent, registrations);
         var output = SourceConstants.GENERATE_CLASS_SOURCE.Replace("{0}", assemblyNameForMethod).Replace("{1}", formatted);
         context.AddSource("AutoRegisterInject.ServiceCollectionExtension.g.cs", SourceText.From(output, Encoding.UTF8));
         return;

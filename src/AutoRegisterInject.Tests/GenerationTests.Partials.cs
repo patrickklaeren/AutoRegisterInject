@@ -92,7 +92,7 @@ public static class AutoRegisterInjectServiceCollectionExtension
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<Bar>();
-serviceCollection.AddSingleton<Bar>();
+        serviceCollection.AddSingleton<Bar>();
         return serviceCollection;
     }
 }";

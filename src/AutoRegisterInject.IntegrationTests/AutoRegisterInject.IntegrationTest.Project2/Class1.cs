@@ -8,7 +8,6 @@ namespace AutoRegisterInject.IntegrationTest.Project2
         public static void Init()
         {
             var serviceCollection = new ServiceCollection()
-                .AutoRegister()
                 .AutoRegisterFromAutoRegisterInjectIntegrationTestProject1()
                 .AutoRegisterFromAutoRegisterInjectIntegrationTestProject2();
 

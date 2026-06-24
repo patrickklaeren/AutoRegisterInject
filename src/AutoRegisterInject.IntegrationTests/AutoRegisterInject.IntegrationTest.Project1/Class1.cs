@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,8 +9,7 @@ namespace AutoRegisterInject.IntegrationTest.Project1
         public static void Init()
         {
             var serviceCollection = new ServiceCollection()
-                .AutoRegister()
-                .AutoRegisterFromAutoRegisterInjectIntegrationTestProject1();
+                .AutoRegister();
 
             serviceCollection.BuildServiceProvider();
         }
@@ -359,4 +357,25 @@ namespace AutoRegisterInject.IntegrationTest.Project1
             
         }
     }
+    
+    // Start issue https://github.com/patrickklaeren/AutoRegisterInject/issues/19
+    [AutoInterface]
+    [RegisterKeyedScoped("base")]
+    public class Test : ITest
+    {
+        public string Text()
+        {
+            return "Hello World!";
+        }
+    }
+
+    [RegisterScoped]
+    public class CachedTest : ITest
+    {
+        public string Text()
+        {
+            return "Cached Hello World!";
+        }
+    }
+    // End issue https://github.com/patrickklaeren/AutoRegisterInject/issues/19
 }

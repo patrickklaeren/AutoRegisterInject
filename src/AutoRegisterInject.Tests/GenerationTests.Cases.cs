@@ -71,12 +71,12 @@ public static class AutoRegisterInjectServiceCollectionExtension
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddHostedService<Foo>();
-serviceCollection.AddScoped<Bar>();
-serviceCollection.AddTransient<Baz>();
-serviceCollection.AddSingleton<IBaz, Bang>();
-serviceCollection.TryAddScoped<Far>();
-serviceCollection.AddKeyedTransient<Faz>(""MyFazKey"");
-serviceCollection.TryAddKeyedSingleton<IBaz, Fang>(""MyFangKey"");
+        serviceCollection.AddScoped<Bar>();
+        serviceCollection.AddTransient<Baz>();
+        serviceCollection.AddSingleton<IBaz, Bang>();
+        serviceCollection.TryAddScoped<Far>();
+        serviceCollection.AddKeyedTransient<Faz>(""MyFazKey"");
+        serviceCollection.TryAddKeyedSingleton<IBaz, Fang>(""MyFangKey"");
         return serviceCollection;
     }
 }";

@@ -92,7 +92,7 @@ public static class AutoRegisterInjectServiceCollectionExtension
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<Foo>();
-serviceCollection.AddScoped<Bar>();
+        serviceCollection.AddScoped<Bar>();
         return serviceCollection;
     }
 }";
@@ -142,7 +142,7 @@ public static class AutoRegisterInjectServiceCollectionExtension
     internal static Microsoft.Extensions.DependencyInjection.IServiceCollection AutoRegister(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<Foo>();
-serviceCollection.AddScoped<IBar, Bar>();
+        serviceCollection.AddScoped<IBar, Bar>();
         return serviceCollection;
     }
 }";
